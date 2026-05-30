@@ -12,97 +12,143 @@ import CompletedPage from './pages/CompletedPage.tsx';
 import AuthPage from './pages/AuthPage.tsx';
 
 const SplashScreen = ({ onFinish }: { onFinish: () => void }) => {
-  const [loadingProgress, setLoadingProgress] = useState(0);
-  const [bootText, setBootText] = useState("INITIALIZING NEURAL INTERFACE...");
+  const [progress, setProgress] = useState(0);
+  const [text, setText] = useState("IGNITING CORE...");
+  const [opacity, setOpacity] = useState(1);
 
   useEffect(() => {
-    const bootSequence = [
-      { p: 10, t: "LOADING CORE MODULES..." },
-      { p: 30, t: "SYNCHRONIZING DATABASES..." },
-      { p: 50, t: "ESTABLISHING SECURE LINK..." },
-      { p: 75, t: "OPTIMIZING NEURAL PATHWAYS..." },
-      { p: 90, t: "SYSTEM READY." },
-      { p: 100, t: "WELCOME USER." }
-    ];
-
-    let currentStep = 0;
+    // Progress sequence simulation
     const interval = setInterval(() => {
-      if (currentStep < bootSequence.length) {
-        setLoadingProgress(bootSequence[currentStep].p);
-        setBootText(bootSequence[currentStep].t);
-        currentStep++;
-      } else {
-        clearInterval(interval);
-        setTimeout(onFinish, 800);
-      }
-    }, 400);
+      setProgress(p => {
+        if (p >= 100) {
+          clearInterval(interval);
+          setTimeout(() => setOpacity(0), 600); // Fade out transition
+          setTimeout(onFinish, 1600); // Unmount after fade
+          return 100;
+        }
+        return p + Math.random() * 8; // Randomize speed slightly
+      });
+    }, 150);
 
-    return () => clearInterval(interval);
+    // Tech text sequence
+    const texts = [
+        "IGNITING CORE...", 
+        "SYNCHRONIZING NEURAL NET...", 
+        "LOADING SOLAR MODULES...", 
+        "OPTIMIZING WORKFLOW...", 
+        "ESTABLISHING CONNECTION...", 
+        "SYSTEM READY"
+    ];
+    let textIdx = 0;
+    const textInterval = setInterval(() => {
+        if (textIdx < texts.length - 1) {
+            textIdx++;
+            setText(texts[textIdx]);
+        }
+    }, 800);
+
+    return () => {
+        clearInterval(interval);
+        clearInterval(textInterval);
+    };
   }, [onFinish]);
 
   return (
-    <div className="fixed inset-0 z-[1000] bg-black text-white flex flex-col items-center justify-center overflow-hidden font-mono">
-      {/* Background Grid */}
-      <div className="absolute inset-0 z-0 opacity-20 pointer-events-none bg-[linear-gradient(rgba(0,255,0,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,0,0.1)_1px,transparent_1px)] bg-[size:40px_40px] [perspective:1000px] [transform-style:preserve-3d] [transform:rotateX(60deg)_scale(2)] origin-top animate-pan-grid"></div>
+    <div 
+        className="fixed inset-0 z-[1000] bg-[#020410] flex flex-col items-center justify-center overflow-hidden transition-opacity duration-1000"
+        style={{ opacity }}
+    >
+        {/* Ambient Background (Deep Space / Nebula feel) */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#1a1c2e] via-[#020410] to-black opacity-60 z-0 animate-pulse-slow" />
+        
+        {/* Animated Dust/Grain Overlay for Cinematic feel */}
+        <div className="absolute inset-0 opacity-[0.05] z-0 pointer-events-none bg-[url('https://grainy-gradients.vercel.app/noise.svg')] animate-grain" />
 
-      {/* Main Content */}
-      <div className="relative z-10 flex flex-col items-center gap-8 w-full max-w-md px-6">
-        {/* Animated Logo */}
-        <div className="relative w-32 h-32 flex items-center justify-center">
-            <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-cyan-500 border-r-purple-500 animate-[spin_2s_linear_infinite]" />
-            <div className="absolute inset-2 rounded-full border-2 border-transparent border-b-pink-500 border-l-blue-500 animate-[spin_3s_linear_infinite_reverse]" />
-            <div className="absolute inset-0 flex items-center justify-center">
-                 <span className="text-6xl font-black text-white animate-pulse">∞</span>
+        <div className="relative z-10 flex flex-col items-center scale-110 md:scale-100">
+            {/* Solar Gas Infinity Symbol Container */}
+            <div className="relative w-80 h-40 flex items-center justify-center mb-10">
+                {/* The 'Gas' Blobs - Solar Colors */}
+                <div className="absolute w-32 h-32 bg-[#FF8C42] rounded-full blur-[50px] animate-orbit-1 opacity-50 mix-blend-screen" />
+                <div className="absolute w-32 h-32 bg-[#F04393] rounded-full blur-[50px] animate-orbit-2 opacity-50 mix-blend-screen" />
+                <div className="absolute w-40 h-40 bg-[#8D46E7] rounded-full blur-[60px] animate-orbit-3 opacity-40 mix-blend-screen" />
+                
+                {/* The Symbol Itself */}
+                <span className="text-9xl font-black text-white/90 relative z-10 drop-shadow-[0_0_30px_rgba(240,67,147,0.6)] animate-pulse-slow font-mono">
+                    ∞
+                </span>
+                
+                {/* Core Flare */}
+                <div className="absolute w-full h-1 bg-white/20 blur-xl top-1/2 -translate-y-1/2 animate-expand" />
             </div>
-            <div className="absolute inset-0 bg-cyan-500/20 blur-xl rounded-full animate-pulse"></div>
+
+            {/* Cinematic Title Reveal */}
+            <div className="overflow-hidden mb-12">
+                <h1 className="text-5xl md:text-8xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-[#FF8C42] via-[#F04393] to-[#8D46E7] animate-cinematic-reveal drop-shadow-2xl">
+                    PRODUCTIVE
+                </h1>
+            </div>
+
+            {/* Tech Status Line */}
+            <div className="flex flex-col items-center gap-3 w-64 md:w-80">
+                <div className="flex justify-between w-full text-[9px] font-black uppercase tracking-[0.3em] text-[#F04393]/80 font-mono">
+                    <span className="animate-pulse">{text}</span>
+                    <span>{Math.min(100, Math.round(progress))}%</span>
+                </div>
+                <div className="w-full h-[2px] bg-white/5 overflow-hidden relative rounded-full">
+                    <div 
+                        className="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-[#FF8C42] via-[#F04393] to-[#8D46E7] shadow-[0_0_20px_#F04393]" 
+                        style={{ width: `${progress}%`, transition: 'width 0.1s linear' }}
+                    />
+                </div>
+            </div>
         </div>
-
-        {/* Title with Glitch Effect */}
-        <h1 className="text-4xl md:text-6xl font-black tracking-tighter relative group">
-          <span className="relative z-10 bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-white to-purple-500">
-            PRODUCTIVE
-          </span>
-          <span className="absolute top-0 left-0 -ml-1 text-red-500 opacity-70 animate-glitch-1 hidden group-hover:block">PRODUCTIVE</span>
-          <span className="absolute top-0 left-0 ml-1 text-blue-500 opacity-70 animate-glitch-2 hidden group-hover:block">PRODUCTIVE</span>
-        </h1>
-
-        {/* Progress Bar */}
-        <div className="w-full space-y-2">
-            <div className="flex justify-between text-[10px] uppercase tracking-widest text-cyan-500/80">
-                <span>{bootText}</span>
-                <span>{loadingProgress}%</span>
-            </div>
-            <div className="w-full h-1 bg-gray-900 rounded-full overflow-hidden border border-white/10">
-                <div 
-                    className="h-full bg-gradient-to-r from-cyan-500 to-purple-600 shadow-[0_0_10px_rgba(6,182,212,0.8)] transition-all duration-300 ease-out"
-                    style={{ width: `${loadingProgress}%` }}
-                />
-            </div>
-        </div>
-      </div>
-
-      <style>{`
-        @keyframes pan-grid {
-            0% { transform: rotateX(60deg) scale(2) translateY(0); }
-            100% { transform: rotateX(60deg) scale(2) translateY(40px); }
-        }
-        @keyframes glitch-1 {
-          0% { clip-path: inset(20% 0 80% 0); transform: translate(-2px, 2px); }
-          20% { clip-path: inset(60% 0 10% 0); transform: translate(2px, -2px); }
-          40% { clip-path: inset(40% 0 50% 0); transform: translate(-2px, 2px); }
-          60% { clip-path: inset(80% 0 5% 0); transform: translate(2px, -2px); }
-          80% { clip-path: inset(10% 0 70% 0); transform: translate(-2px, 2px); }
-          100% { clip-path: inset(30% 0 50% 0); transform: translate(2px, -2px); }
-        }
-        @keyframes glitch-2 {
-          0% { clip-path: inset(10% 0 60% 0); transform: translate(2px, -2px); }
-          20% { clip-path: inset(80% 0 5% 0); transform: translate(-2px, 2px); }
-          40% { clip-path: inset(30% 0 20% 0); transform: translate(2px, -2px); }
-          60% { clip-path: inset(10% 0 80% 0); transform: translate(-2px, 2px); }
-          80% { clip-path: inset(50% 0 30% 0); transform: translate(2px, -2px); }
-          100% { clip-path: inset(70% 0 10% 0); transform: translate(-2px, 2px); }
-        }
-      `}</style>
+        
+        <style>{`
+            @keyframes orbit-1 {
+                0% { transform: translate(-40px, -20px) scale(1); }
+                33% { transform: translate(40px, 40px) scale(1.2); }
+                66% { transform: translate(-20px, 40px) scale(0.9); }
+                100% { transform: translate(-40px, -20px) scale(1); }
+            }
+            @keyframes orbit-2 {
+                0% { transform: translate(40px, -30px) scale(1.1); }
+                33% { transform: translate(-40px, 20px) scale(0.9); }
+                66% { transform: translate(30px, 50px) scale(1.2); }
+                100% { transform: translate(40px, -30px) scale(1.1); }
+            }
+            @keyframes orbit-3 {
+                0% { transform: translate(0px, 50px) scale(0.8); }
+                50% { transform: translate(0px, -50px) scale(1.1); }
+                100% { transform: translate(0px, 50px) scale(0.8); }
+            }
+            @keyframes cinematic-reveal {
+                0% { transform: translateY(100%); opacity: 0; letter-spacing: 0.3em; filter: blur(20px); }
+                100% { transform: translateY(0); opacity: 1; letter-spacing: -0.05em; filter: blur(0px); }
+            }
+            @keyframes expand {
+                0% { transform: scaleX(0); opacity: 0; }
+                50% { transform: scaleX(1); opacity: 1; }
+                100% { transform: scaleX(0); opacity: 0; }
+            }
+            @keyframes grain {
+                0%, 100% { transform: translate(0, 0); }
+                10% { transform: translate(-5%, -10%); }
+                20% { transform: translate(-15%, 5%); }
+                30% { transform: translate(7%, -25%); }
+                40% { transform: translate(-5%, 25%); }
+                50% { transform: translate(-15%, 10%); }
+                60% { transform: translate(15%, 0%); }
+                70% { transform: translate(0%, 15%); }
+                80% { transform: translate(3%, 35%); }
+                90% { transform: translate(-10%, 10%); }
+            }
+            .animate-orbit-1 { animation: orbit-1 8s infinite ease-in-out; }
+            .animate-orbit-2 { animation: orbit-2 10s infinite ease-in-out; }
+            .animate-orbit-3 { animation: orbit-3 12s infinite ease-in-out; }
+            .animate-cinematic-reveal { animation: cinematic-reveal 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+            .animate-expand { animation: expand 3s ease-in-out infinite; }
+            .animate-grain { animation: grain 8s steps(10) infinite; }
+        `}</style>
     </div>
   );
 };
